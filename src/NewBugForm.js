@@ -1,7 +1,7 @@
 import './App.css';
 import { useEffect, useState } from 'react'
 
-function NewBugForm({ currentBugsList }) {
+function NewBugForm() {
   const [nameOfApp, setNameOfApp] = useState("")
   const [nameError, setNameError] = useState(false)
   const [typeOfEntry, setTypeOfEntry] = useState("")

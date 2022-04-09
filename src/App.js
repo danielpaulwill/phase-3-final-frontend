@@ -5,6 +5,7 @@ import NewBugForm from './NewBugForm';
 
 function App() {
   const [currentBugsList, setCurrentBugsList] = useState([])
+  const [categoryList, setCategoryList] = useState([])
 
   useEffect(() => {
     getAllTasks()
@@ -20,13 +21,23 @@ function App() {
   function getAllCategories() {
     fetch("http://localhost:9292/categories")
     .then(res => res.json())
-    .then(data => console.log(data))
+    .then(data => setCategoryList(data))
   }
 
-  function handleDeleteTask() {
-
+  function handleDeleteTask(e) {
+    fetch(`http://localhost:9292/task/${e.target.value}`, {
+      method: "DELETE",
+    })
+    .then(res => res.json())
+    .then(data => {
+      let newBugsList = currentBugsList.filter(bug => {
+        if (bug.id === data.id) {
+        } else return bug
+      })
+      setCurrentBugsList(newBugsList)
+    })
   }
-  
+
   return (
     <div>
       <NewBugForm currentBugsList={currentBugsList} />
