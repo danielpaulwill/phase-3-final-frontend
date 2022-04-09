@@ -1,14 +1,22 @@
 import './App.css';
 import { useEffect, useState } from 'react'
 
-function NewBugForm() {
+function NewBugForm({currentBugsList, categoryList, onAddTask}) {
   const [nameOfApp, setNameOfApp] = useState("")
   const [nameError, setNameError] = useState(false)
   const [typeOfEntry, setTypeOfEntry] = useState("")
+  const [categoryId, setCategoryId] = useState(0)
   const [entryError, setEntryError] = useState(false)
   const [descOfApp, setDescOfApp] = useState("")
   const [descriptionError, setDescriptionError] = useState(false)
-  const [currentAppNames, setCurrentAppNames] = useState([])
+  const [appNamesList, setAppNamesList] = useState([])
+
+  useEffect(() => {
+    categoryList.map(category => {
+      if (typeOfEntry === category.name) {
+        setCategoryId(category.id)
+      }})
+  }, [typeOfEntry])
 
   function handleAppName(e) {
     setNameOfApp(e.target.value)
@@ -26,7 +34,6 @@ function NewBugForm() {
     setNameError(false)
     setEntryError(false)
     setDescriptionError(false)
-
     if (nameOfApp === "") {
       setNameError(nameError => !nameError)
     } else if (typeOfEntry === "") {
@@ -35,27 +42,39 @@ function NewBugForm() {
       setDescriptionError(descriptionError => !descriptionError)
     }
     else {
-    // SWITCH OUT THESE CONSOLE.LOGs WITH A POST
-    console.log({ nameOfApp })
-    console.log({ typeOfEntry })
-    console.log({ descOfApp })
+    fetch("http://localhost:9292/tasks", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: nameOfApp,
+          category_id: categoryId,
+          description: descOfApp,
+        }),
+      })
+        .then(res => res.json())
+        .then(data => onAddTask(data))
 
     setNameOfApp("")
     setTypeOfEntry("")
     setDescOfApp("")
-  }
+    }
   }
 
   useEffect(() => {
     fetch("http://localhost:9292/app-names")
     .then(res => res.json())
-    .then(data => setCurrentAppNames(data))
-  }, [])
+    .then(data => handleAppNamesList(data))
+  }, [currentBugsList])
 
-  // NEED TO GRAB UNIQUE NAMES FROM BACKEND
-  const appNamesList = currentAppNames.map(name => (
-    <li key={name}>{name}</li>
-  ))
+  function handleAppNamesList(data) {
+    let appNamesList = data.map(name => (
+      <li key={name}>{name}</li>
+    ))
+    setAppNamesList(appNamesList)
+  }
+
   return (
     <div id='newBugForm'>
       <div id='newBugFormTitle'>
@@ -74,13 +93,13 @@ function NewBugForm() {
        <br></br>
         <label>Entry Type</label>
         <form onChange={handleEntryType} id="bugFormRadio" >
-          <input type="radio" value="Bug" name="entryType" checked={typeOfEntry === "Bug"}></input>
+          <input type="radio" value="Bug" name="entryType"></input>
           <label>Bug</label>
           <br></br>
-          <input type="radio" value="Feature" name="entryType" checked={typeOfEntry === "Feature"}></input>
+          <input type="radio" value="Feature" name="entryType"></input>
           <label>Feature</label>
           <br></br>
-          <input type="radio" value="New App" name="entryType" checked={typeOfEntry === "New App"}></input>
+          <input type="radio" value="New App" name="entryType"></input>
           <label>New App</label>
         </form>
         <p id={entryError ? "entryError" : "hidden"}>Select entry type</p>
@@ -93,7 +112,6 @@ function NewBugForm() {
       </div>
 
       <button id="bugFormButton" onClick={handleFormSubmit}>Submit Ticket</button>
-
     </div>
   );
 }

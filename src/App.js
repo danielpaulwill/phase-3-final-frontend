@@ -38,10 +38,14 @@ function App() {
     })
   }
 
+  function handleAddTask(data) {
+    setCurrentBugsList([...currentBugsList, data])
+  }
+
   return (
     <div>
-      <NewBugForm currentBugsList={currentBugsList} />
-      <BugList currentBugsList={currentBugsList} onDelete={handleDeleteTask}/>
+      <NewBugForm onAddTask={handleAddTask} categoryList={categoryList} currentBugsList={currentBugsList}/>
+      <BugList currentBugsList={currentBugsList} onDelete={handleDeleteTask} />
     </div>
   );
 }

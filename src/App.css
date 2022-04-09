@@ -123,3 +123,11 @@
   border-top: 10px solid transparent;
   border-bottom: 10px solid transparent;
 }
+
+#totalTickets {
+  border: 1px solid orange;
+  width: 150px;
+  height: 40px;
+  padding-top: 20px;
+  text-align: center;
+}
