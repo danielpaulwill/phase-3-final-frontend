@@ -5,9 +5,9 @@ function NewBugForm({currentBugsList, categoryList, onAddTask}) {
   const [nameOfApp, setNameOfApp] = useState("")
   const [nameError, setNameError] = useState(false)
   const [typeOfEntry, setTypeOfEntry] = useState("")
-  const [categoryId, setCategoryId] = useState(0)
   const [entryError, setEntryError] = useState(false)
   const [descOfApp, setDescOfApp] = useState("")
+  const [categoryId, setCategoryId] = useState(0)
   const [descriptionError, setDescriptionError] = useState(false)
   const [appNamesList, setAppNamesList] = useState([])
 
@@ -93,13 +93,13 @@ function NewBugForm({currentBugsList, categoryList, onAddTask}) {
        <br></br>
         <label>Entry Type</label>
         <form onChange={handleEntryType} id="bugFormRadio" >
-          <input type="radio" value="Bug" name="entryType"></input>
+          <input type="radio" value="Bug" name="entryType" checked={typeOfEntry === "Bug"}></input>
           <label>Bug</label>
           <br></br>
-          <input type="radio" value="Feature" name="entryType"></input>
+          <input type="radio" value="Feature" name="entryType" checked={typeOfEntry === "Feature"}></input>
           <label>Feature</label>
           <br></br>
-          <input type="radio" value="New App" name="entryType"></input>
+          <input type="radio" value="New App" name="entryType" checked={typeOfEntry === "New App"}></input>
           <label>New App</label>
         </form>
         <p id={entryError ? "entryError" : "hidden"}>Select entry type</p>
